@@ -7,10 +7,10 @@ import org.kowal.auth.grpc.RegisterResponse;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthService {
+public class AuthGatewayService {
     private final AuthGrpcClient authGrpcClient;
 
-    public AuthService(AuthGrpcClient authGrpcClient) {
+    public AuthGatewayService(AuthGrpcClient authGrpcClient) {
         this.authGrpcClient = authGrpcClient;
      }
 

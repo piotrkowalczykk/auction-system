@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthGatewayService authGatewayService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(AuthGatewayService authGatewayService) {
+        this.authGatewayService = authGatewayService;
     }
 
     @PostMapping("/register")
     public RegisterResponseDto register(@RequestBody RegisterRequestDto request) {
-        return authService.register(request);
+        return authGatewayService.register(request);
     }
 }
