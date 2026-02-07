@@ -1,6 +1,7 @@
 package org.kowal.apigateway.exception.handler;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import org.kowal.apigateway.exception.custom.JwtAuthenticationException;
 import org.kowal.apigateway.exception.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,15 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(errorResponse, httpStatus);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleJwtAuthenticationException(JwtAuthenticationException ex) {
+        ErrorResponse error = new ErrorResponse(
+                ex.getMessage(),
+                HttpStatus.UNAUTHORIZED.value(),
+                Instant.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
