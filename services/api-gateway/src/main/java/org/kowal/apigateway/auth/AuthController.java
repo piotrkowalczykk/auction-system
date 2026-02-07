@@ -1,5 +1,7 @@
 package org.kowal.apigateway.auth;
 
+import org.kowal.apigateway.auth.dto.LoginRequestDto;
+import org.kowal.apigateway.auth.dto.LoginResponseDto;
 import org.kowal.apigateway.auth.dto.RegisterRequestDto;
 import org.kowal.apigateway.auth.dto.RegisterResponseDto;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,5 +22,10 @@ public class AuthController {
     @PostMapping("/register")
     public RegisterResponseDto register(@RequestBody RegisterRequestDto request) {
         return authGatewayService.register(request);
+    }
+
+    @PostMapping("/login")
+    public LoginResponseDto login(@RequestBody LoginRequestDto request) {
+        return authGatewayService.login(request);
     }
 }

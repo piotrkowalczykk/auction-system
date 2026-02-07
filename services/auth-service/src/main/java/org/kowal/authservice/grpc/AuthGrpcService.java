@@ -7,6 +7,7 @@ import org.kowal.auth.grpc.*;
 import org.kowal.authservice.entity.AuthUser;
 import org.kowal.authservice.exception.EmailAlreadyExistsException;
 import org.kowal.authservice.service.AuthService;
+import org.kowal.security.TokenPair;
 
 @GrpcService
 public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
@@ -52,6 +53,22 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
                             .asRuntimeException()
             );
         }
+    }
+
+    @Override
+    public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
+        TokenPair tokens = authService.login(
+                request.getEmail(),
+                request.getPassword()
+        );
+
+        LoginResponse response = LoginResponse.newBuilder()
+                .setAccessToken(tokens.getAccessToken())
+                .setRefreshToken(tokens.getRefreshToken())
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     @Override

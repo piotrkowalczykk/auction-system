@@ -3,9 +3,7 @@ package org.kowal.apigateway.grpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.kowal.auth.grpc.AuthServiceGrpc;
-import org.kowal.auth.grpc.RegisterRequest;
-import org.kowal.auth.grpc.RegisterResponse;
+import org.kowal.auth.grpc.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,5 +19,14 @@ public class AuthGrpcClient {
                 .build();
 
         return blockingStub.register(request);
+    }
+
+    public LoginResponse login(String email, String password){
+        LoginRequest request = LoginRequest.newBuilder()
+                .setEmail(email)
+                .setPassword(password)
+                .build();
+
+        return blockingStub.login(request);
     }
 }

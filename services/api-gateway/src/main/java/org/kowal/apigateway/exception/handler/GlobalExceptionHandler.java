@@ -1,6 +1,7 @@
-package org.kowal.apigateway.exception;
+package org.kowal.apigateway.exception.handler;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import org.kowal.apigateway.exception.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

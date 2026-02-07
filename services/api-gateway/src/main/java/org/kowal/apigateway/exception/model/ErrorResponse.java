@@ -1,4 +1,4 @@
-package org.kowal.apigateway.exception;
+package org.kowal.apigateway.exception.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
