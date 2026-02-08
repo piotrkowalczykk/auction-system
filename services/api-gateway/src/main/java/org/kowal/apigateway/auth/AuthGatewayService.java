@@ -1,11 +1,9 @@
 package org.kowal.apigateway.auth;
 
-import org.kowal.apigateway.auth.dto.LoginRequestDto;
-import org.kowal.apigateway.auth.dto.LoginResponseDto;
-import org.kowal.apigateway.auth.dto.RegisterRequestDto;
-import org.kowal.apigateway.auth.dto.RegisterResponseDto;
+import org.kowal.apigateway.auth.dto.*;
 import org.kowal.apigateway.grpc.AuthGrpcClient;
 import org.kowal.auth.grpc.LoginResponse;
+import org.kowal.auth.grpc.RefreshTokenResponse;
 import org.kowal.auth.grpc.RegisterResponse;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +30,15 @@ public class AuthGatewayService {
         LoginResponse grpcResponse = authGrpcClient.login(request.getEmail(), request.getPassword());
 
         return new LoginResponseDto(
+                grpcResponse.getAccessToken(),
+                grpcResponse.getRefreshToken()
+        );
+    }
+
+    public RefreshTokenResponseDto refresh(RefreshTokenRequestDto request){
+        RefreshTokenResponse grpcResponse = authGrpcClient.refresh(request.getRefreshToken());
+
+        return new RefreshTokenResponseDto(
                 grpcResponse.getAccessToken(),
                 grpcResponse.getRefreshToken()
         );

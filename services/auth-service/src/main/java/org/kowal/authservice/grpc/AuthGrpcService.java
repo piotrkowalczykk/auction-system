@@ -5,7 +5,8 @@ import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.kowal.auth.grpc.*;
 import org.kowal.authservice.entity.AuthUser;
-import org.kowal.authservice.exception.EmailAlreadyExistsException;
+import org.kowal.authservice.exception.custom.EmailAlreadyExistsException;
+import org.kowal.authservice.exception.mapper.GrpcExceptionMapper;
 import org.kowal.authservice.service.AuthService;
 import org.kowal.security.TokenPair;
 
@@ -22,7 +23,6 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
     public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver){
 
         try {
-
             AuthUser user = authService.register(
                     request.getEmail(),
                     request.getPassword()
@@ -37,19 +37,10 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
             responseObserver.onNext(response);
             responseObserver.onCompleted();
 
-        } catch (EmailAlreadyExistsException ex) {
-
-            responseObserver.onError(
-                    Status.ALREADY_EXISTS
-                            .withDescription(ex.getMessage())
-                            .asRuntimeException()
-            );
-
         } catch (Exception ex) {
-
             responseObserver.onError(
-                    Status.INTERNAL
-                            .withDescription("Internal server error")
+                    GrpcExceptionMapper
+                            .map(ex)
                             .asRuntimeException()
             );
         }
@@ -57,18 +48,50 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
 
     @Override
     public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
-        TokenPair tokens = authService.login(
-                request.getEmail(),
-                request.getPassword()
-        );
 
-        LoginResponse response = LoginResponse.newBuilder()
-                .setAccessToken(tokens.getAccessToken())
-                .setRefreshToken(tokens.getRefreshToken())
-                .build();
+        try{
+            TokenPair tokens = authService.login(
+                    request.getEmail(),
+                    request.getPassword()
+            );
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+            LoginResponse response = LoginResponse.newBuilder()
+                    .setAccessToken(tokens.getAccessToken())
+                    .setRefreshToken(tokens.getRefreshToken())
+                    .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+
+        } catch (Exception ex) {
+            responseObserver.onError(
+                    GrpcExceptionMapper
+                            .map(ex)
+                            .asRuntimeException()
+            );
+        }
+    }
+
+    @Override
+    public void refreshToken(RefreshTokenRequest request, StreamObserver<RefreshTokenResponse> responseObserver) {
+        try {
+            TokenPair newTokens = authService.refresh(request.getRefreshToken());
+
+            RefreshTokenResponse response = RefreshTokenResponse.newBuilder()
+                    .setAccessToken(newTokens.getAccessToken())
+                    .setRefreshToken(newTokens.getRefreshToken())
+                    .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+
+        } catch (Exception ex) {
+            responseObserver.onError(
+                    GrpcExceptionMapper
+                            .map(ex)
+                            .asRuntimeException()
+            );
+        }
     }
 
     @Override

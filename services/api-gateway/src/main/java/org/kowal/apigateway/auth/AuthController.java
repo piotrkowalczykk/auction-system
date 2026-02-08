@@ -1,9 +1,7 @@
 package org.kowal.apigateway.auth;
 
-import org.kowal.apigateway.auth.dto.LoginRequestDto;
-import org.kowal.apigateway.auth.dto.LoginResponseDto;
-import org.kowal.apigateway.auth.dto.RegisterRequestDto;
-import org.kowal.apigateway.auth.dto.RegisterResponseDto;
+import org.kowal.apigateway.auth.dto.*;
+import org.kowal.security.TokenPair;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +22,11 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto request) {
         return authGatewayService.login(request);
+    }
+
+    @PostMapping("/refresh")
+    public RefreshTokenResponseDto refresh(@RequestBody RefreshTokenRequestDto request) {
+        return authGatewayService.refresh(request);
     }
 
     @GetMapping("/test")

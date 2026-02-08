@@ -1,7 +1,5 @@
 package org.kowal.apigateway.grpc;
 
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.kowal.auth.grpc.*;
 import org.springframework.stereotype.Component;
@@ -28,5 +26,13 @@ public class AuthGrpcClient {
                 .build();
 
         return blockingStub.login(request);
+    }
+
+    public RefreshTokenResponse refresh(String refreshToken){
+        RefreshTokenRequest request = RefreshTokenRequest.newBuilder()
+                .setRefreshToken(refreshToken)
+                .build();
+
+        return blockingStub.refreshToken(request);
     }
 }
