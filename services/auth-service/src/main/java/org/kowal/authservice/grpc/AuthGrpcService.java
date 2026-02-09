@@ -1,29 +1,29 @@
 package org.kowal.authservice.grpc;
 
-import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import lombok.AllArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.kowal.auth.grpc.*;
 import org.kowal.authservice.entity.AuthUser;
-import org.kowal.authservice.exception.custom.EmailAlreadyExistsException;
 import org.kowal.authservice.exception.mapper.GrpcExceptionMapper;
-import org.kowal.authservice.service.AuthService;
+import org.kowal.authservice.service.AuthenticationService;
+import org.kowal.authservice.service.EmailVerificationService;
+import org.kowal.authservice.service.RefreshTokenService;
 import org.kowal.security.TokenPair;
 
 @GrpcService
+@AllArgsConstructor
 public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
 
-    private final AuthService authService;
-
-    public AuthGrpcService(AuthService authService) {
-        this.authService = authService;
-    }
+    private final AuthenticationService authenticationService;
+    private final RefreshTokenService refreshTokenService;
+    private final EmailVerificationService emailVerificationService;
 
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver){
 
         try {
-            AuthUser user = authService.register(
+            AuthUser user = authenticationService.register(
                     request.getEmail(),
                     request.getPassword()
             );
@@ -50,7 +50,7 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
     public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
 
         try{
-            TokenPair tokens = authService.login(
+            TokenPair tokens = authenticationService.login(
                     request.getEmail(),
                     request.getPassword()
             );
@@ -75,7 +75,7 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
     @Override
     public void refreshToken(RefreshTokenRequest request, StreamObserver<RefreshTokenResponse> responseObserver) {
         try {
-            TokenPair newTokens = authService.refresh(request.getRefreshToken());
+            TokenPair newTokens = refreshTokenService.refresh(request.getRefreshToken());
 
             RefreshTokenResponse response = RefreshTokenResponse.newBuilder()
                     .setAccessToken(newTokens.getAccessToken())
@@ -97,9 +97,10 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
     @Override
     public void verifyEmail(VerifyEmailRequest request, StreamObserver<VerifyEmailResponse> responseObserver) {
 
-        System.out.println("Verify email token: " + request.getToken());
+        emailVerificationService.verify(request.getToken());
 
         VerifyEmailResponse response = VerifyEmailResponse.newBuilder()
+                .setMessage("Email verified successfully")
                 .setVerified(true)
                 .build();
 

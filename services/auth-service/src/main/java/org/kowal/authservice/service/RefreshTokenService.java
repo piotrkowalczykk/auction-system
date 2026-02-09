@@ -3,63 +3,40 @@ package org.kowal.authservice.service;
 import lombok.AllArgsConstructor;
 import org.kowal.authservice.entity.AuthUser;
 import org.kowal.authservice.entity.RefreshToken;
-import org.kowal.authservice.exception.custom.EmailAlreadyExistsException;
-import org.kowal.authservice.exception.custom.InvalidCredentialsException;
 import org.kowal.authservice.exception.custom.InvalidRefreshTokenException;
+import org.kowal.authservice.exception.custom.UserNotFoundException;
 import org.kowal.authservice.repository.AuthUserRepository;
 import org.kowal.authservice.repository.RefreshTokenRepository;
 import org.kowal.security.JwtService;
 import org.kowal.security.TokenPair;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 @Service
 @AllArgsConstructor
-public class AuthService {
+public class RefreshTokenService {
     private final AuthUserRepository authUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
 
 
-    public AuthUser register(String email, String password) {
-        authUserRepository.findByEmail(email).ifPresent(user -> {
-            throw new EmailAlreadyExistsException(email);
-        });
+    public String createRefreshToken(AuthUser user){
+        String refreshTokenValue = jwtService.generateRefreshToken(user.getId());
 
-        AuthUser user = AuthUser.builder()
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .emailVerified(false)
-                .build();
-
-        return authUserRepository.save(user);
-    }
-
-    public TokenPair login(String email, String password) {
-        AuthUser user = authUserRepository.findByEmail(email)
-                .orElseThrow(InvalidCredentialsException::new);
-
-        if(!passwordEncoder.matches(password, user.getPassword()))
-            throw new InvalidCredentialsException();
-
-        String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail());
-        String refreshToken = jwtService.generateRefreshToken(user.getId());
-
-        RefreshToken token = RefreshToken.builder()
-                .token(refreshToken)
+        RefreshToken refreshToken = RefreshToken.builder()
+                .token(refreshTokenValue)
                 .userId(user.getId())
                 .expiration(new Date(System.currentTimeMillis() + 604800000))
                 .revoked(false)
                 .build();
 
-        refreshTokenRepository.save(token);
-
-        return new TokenPair(accessToken, refreshToken);
+        refreshTokenRepository.save(refreshToken);
+        return refreshTokenValue;
     }
 
+    @Transactional
     public TokenPair refresh(String refreshTokenValue){
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
                 .orElseThrow(InvalidRefreshTokenException::new);
@@ -72,7 +49,7 @@ public class AuthService {
 
         String userId = refreshToken.getUserId();
         AuthUser user = authUserRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(UserNotFoundException::new);
 
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
@@ -91,4 +68,5 @@ public class AuthService {
 
         return new TokenPair(newAccessToken, newRefreshToken);
     }
+
 }

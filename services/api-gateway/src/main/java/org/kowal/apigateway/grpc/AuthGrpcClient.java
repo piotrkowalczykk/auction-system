@@ -35,4 +35,12 @@ public class AuthGrpcClient {
 
         return blockingStub.refreshToken(request);
     }
+
+    public VerifyEmailResponse verifyEmail(String token){
+        VerifyEmailRequest request = VerifyEmailRequest.newBuilder()
+                .setToken(token)
+                .build();
+
+        return blockingStub.verifyEmail(request);
+    }
 }

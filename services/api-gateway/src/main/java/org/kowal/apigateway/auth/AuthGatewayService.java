@@ -5,6 +5,7 @@ import org.kowal.apigateway.grpc.AuthGrpcClient;
 import org.kowal.auth.grpc.LoginResponse;
 import org.kowal.auth.grpc.RefreshTokenResponse;
 import org.kowal.auth.grpc.RegisterResponse;
+import org.kowal.auth.grpc.VerifyEmailResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,6 +42,14 @@ public class AuthGatewayService {
         return new RefreshTokenResponseDto(
                 grpcResponse.getAccessToken(),
                 grpcResponse.getRefreshToken()
+        );
+    }
+
+    public EmailVerificationResponseDto verifyEmail(String token) {
+        VerifyEmailResponse grpcResponse = authGrpcClient.verifyEmail(token);
+        return new EmailVerificationResponseDto(
+                grpcResponse.getMessage(),
+                grpcResponse.getVerified()
         );
     }
 }

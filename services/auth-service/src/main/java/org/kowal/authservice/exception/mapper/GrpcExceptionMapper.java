@@ -9,6 +9,6 @@ public class GrpcExceptionMapper {
             return serviceException.getGrpcStatus().withDescription(serviceException.getMessage());
         }
 
-        return Status.INTERNAL.withDescription("Internal server error");
+        return Status.INTERNAL.withDescription("Internal server error" + (ex.getMessage() != null ? ": " + ex.getMessage() : ""));
     }
 }

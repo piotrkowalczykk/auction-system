@@ -1,0 +1,12 @@
+syntax = "proto3";
+package event;
+
+option java_multiple_files = true;
+option java_package = "org.kowal.event.grpc";
+option java_outer_classname = "EventProto";
+
+message EmailVerificationEvent {
+    string userId = 1;
+    string email = 2;
+    string verificationToken = 3;
+}

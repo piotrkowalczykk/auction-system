@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.Instant;
 import java.util.UUID;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

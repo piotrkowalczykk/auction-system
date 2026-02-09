@@ -29,6 +29,11 @@ public class AuthController {
         return authGatewayService.refresh(request);
     }
 
+    @GetMapping("/verify-email")
+    public EmailVerificationResponseDto verifyEmail(@RequestParam String token) {
+        return authGatewayService.verifyEmail(token);
+    }
+
     @GetMapping("/test")
     public String test() {
         return "test";
