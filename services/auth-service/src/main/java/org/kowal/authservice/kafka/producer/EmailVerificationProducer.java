@@ -5,9 +5,10 @@ import lombok.AllArgsConstructor;
 import org.kowal.event.grpc.EmailVerificationEvent;
 import org.kowal.topic.KafkaTopics;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 @AllArgsConstructor
 public class EmailVerificationProducer {
     private final KafkaTemplate<String, byte[]> kafkaTemplate;

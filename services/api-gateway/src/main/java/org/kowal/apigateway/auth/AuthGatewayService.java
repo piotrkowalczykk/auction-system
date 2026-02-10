@@ -2,10 +2,7 @@ package org.kowal.apigateway.auth;
 
 import org.kowal.apigateway.auth.dto.*;
 import org.kowal.apigateway.grpc.AuthGrpcClient;
-import org.kowal.auth.grpc.LoginResponse;
-import org.kowal.auth.grpc.RefreshTokenResponse;
-import org.kowal.auth.grpc.RegisterResponse;
-import org.kowal.auth.grpc.VerifyEmailResponse;
+import org.kowal.auth.grpc.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,6 +47,14 @@ public class AuthGatewayService {
         return new EmailVerificationResponseDto(
                 grpcResponse.getMessage(),
                 grpcResponse.getVerified()
+        );
+    }
+
+    public ResetPasswordResponseDto resetPassword(ResetPasswordRequestDto request) {
+        ResetPasswordResponse grpcResponse = authGrpcClient.resetPassword(request.getEmail());
+        return new ResetPasswordResponseDto(
+                grpcResponse.getMessage(),
+                grpcResponse.getReset()
         );
     }
 }

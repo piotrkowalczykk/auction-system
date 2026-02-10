@@ -8,6 +8,7 @@ import org.kowal.authservice.entity.AuthUser;
 import org.kowal.authservice.exception.mapper.GrpcExceptionMapper;
 import org.kowal.authservice.service.AuthenticationService;
 import org.kowal.authservice.service.EmailVerificationService;
+import org.kowal.authservice.service.PasswordResetService;
 import org.kowal.authservice.service.RefreshTokenService;
 import org.kowal.security.TokenPair;
 
@@ -18,6 +19,7 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
     private final AuthenticationService authenticationService;
     private final RefreshTokenService refreshTokenService;
     private final EmailVerificationService emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver){
@@ -102,6 +104,19 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
         VerifyEmailResponse response = VerifyEmailResponse.newBuilder()
                 .setMessage("Email verified successfully")
                 .setVerified(true)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest request, StreamObserver<ResetPasswordResponse> responseObserver) {
+        passwordResetService.requestReset(request.getEmail());
+
+        ResetPasswordResponse response = ResetPasswordResponse.newBuilder()
+                .setMessage("Password reset email sent if the email exists")
+                .setReset(true)
                 .build();
 
         responseObserver.onNext(response);

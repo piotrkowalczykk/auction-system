@@ -43,4 +43,12 @@ public class AuthGrpcClient {
 
         return blockingStub.verifyEmail(request);
     }
+
+    public ResetPasswordResponse resetPassword(String email) {
+        ResetPasswordRequest request = ResetPasswordRequest.newBuilder()
+                .setEmail(email)
+                .build();
+
+        return blockingStub.resetPassword(request);
+    }
 }

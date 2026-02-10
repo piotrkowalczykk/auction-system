@@ -27,11 +27,6 @@ public class KafkaConsumerConfig {
         );
 
         config.put(
-                ConsumerConfig.GROUP_ID_CONFIG,
-                "notification-service"
-        );
-
-        config.put(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 StringDeserializer.class
         );

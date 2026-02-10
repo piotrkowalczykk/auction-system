@@ -1,7 +1,7 @@
 package org.kowal.apigateway.auth;
 
 import org.kowal.apigateway.auth.dto.*;
-import org.kowal.security.TokenPair;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,6 +32,16 @@ public class AuthController {
     @GetMapping("/verify-email")
     public EmailVerificationResponseDto verifyEmail(@RequestParam String token) {
         return authGatewayService.verifyEmail(token);
+    }
+
+    @PostMapping("/reset-password")
+    public ResetPasswordResponseDto resetPassword(@RequestBody ResetPasswordRequestDto request){
+        return authGatewayService.resetPassword(request);
+    }
+
+    @PostMapping("/reset-password/confirm")
+    public ResetPasswordConfirmResponseDto resetPasswordConfirm(@RequestBody ResetPasswordConfirmRequestDto request) {
+        return null;
     }
 
     @GetMapping("/test")
