@@ -44,11 +44,28 @@ public class AuthGrpcClient {
         return blockingStub.verifyEmail(request);
     }
 
+    public ResendVerificationEmailResponse resendVerification(String email){
+        ResendVerificationEmailRequest request = ResendVerificationEmailRequest.newBuilder()
+                .setEmail(email)
+                .build();
+
+        return blockingStub.resendVerification(request);
+    }
+
     public ResetPasswordResponse resetPassword(String email) {
         ResetPasswordRequest request = ResetPasswordRequest.newBuilder()
                 .setEmail(email)
                 .build();
 
         return blockingStub.resetPassword(request);
+    }
+
+    public ResetPasswordConfirmResponse resetPasswordConfirm(String token, String newPassword) {
+        ResetPasswordConfirmRequest request = ResetPasswordConfirmRequest.newBuilder()
+                .setToken(token)
+                .setNewPassword(newPassword)
+                .build();
+
+        return blockingStub.resetPasswordConfirm(request);
     }
 }

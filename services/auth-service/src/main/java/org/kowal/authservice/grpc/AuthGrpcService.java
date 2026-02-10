@@ -111,11 +111,37 @@ public class AuthGrpcService extends AuthServiceGrpc.AuthServiceImplBase {
     }
 
     @Override
+    public void resendVerification(ResendVerificationEmailRequest request, StreamObserver<ResendVerificationEmailResponse> responseObserver) {
+        emailVerificationService.resendVerification(request.getEmail());
+
+        ResendVerificationEmailResponse response = ResendVerificationEmailResponse.newBuilder()
+                .setMessage("Verification email resent if the email exists")
+                .setResent(true)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void resetPassword(ResetPasswordRequest request, StreamObserver<ResetPasswordResponse> responseObserver) {
         passwordResetService.requestReset(request.getEmail());
 
         ResetPasswordResponse response = ResetPasswordResponse.newBuilder()
                 .setMessage("Password reset email sent if the email exists")
+                .setReset(true)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void resetPasswordConfirm(ResetPasswordConfirmRequest request, StreamObserver<ResetPasswordConfirmResponse> responseObserver) {
+        passwordResetService.confirmReset(request.getToken(), request.getNewPassword());
+
+        ResetPasswordConfirmResponse response = ResetPasswordConfirmResponse.newBuilder()
+                .setMessage("Password reset successfully")
                 .setReset(true)
                 .build();
 

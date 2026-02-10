@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 public class PasswordResetConsumer {
     private final EmailService emailService;
 
-    @KafkaListener(topics = "password-reset-topic", groupId = "notification-service", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "password-reset-topic", groupId = "notification-service",
+            containerFactory = "kafkaListenerContainerFactory")
     public void consume(byte[] bytes) throws InvalidProtocolBufferException {
         ResetPasswordEvent event = ResetPasswordEvent.parseFrom(bytes);
 

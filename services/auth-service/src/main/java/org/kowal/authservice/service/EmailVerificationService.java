@@ -43,6 +43,16 @@ public class EmailVerificationService {
                         .build());
     }
 
+    public void resendVerification(String email) {
+        AuthUser user = authUserRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (user.isEmailVerified())
+            return;
+
+        createVerification(user.getId(), user.getEmail());
+    }
+
     public void verify(String token) {
         EmailVerificationToken verificationToken = emailVerificationTokenRepository.findById(token)
                 .orElseThrow(EmailVerificationTokenNotFoundException::new);

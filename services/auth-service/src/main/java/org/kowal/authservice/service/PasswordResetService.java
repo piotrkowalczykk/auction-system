@@ -3,6 +3,7 @@ package org.kowal.authservice.service;
 import lombok.AllArgsConstructor;
 import org.kowal.authservice.entity.AuthUser;
 import org.kowal.authservice.entity.PasswordResetToken;
+import org.kowal.authservice.exception.custom.PasswordResetTokenAlreadyUsedException;
 import org.kowal.authservice.exception.custom.UserNotFoundException;
 import org.kowal.authservice.kafka.producer.PasswordResetProducer;
 import org.kowal.authservice.repository.AuthUserRepository;
@@ -43,5 +44,25 @@ public class PasswordResetService {
                 .setEmail(email)
                 .setResetToken(token)
                 .build());
+    }
+
+    public void confirmReset(String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findById(token)
+                .orElseThrow(PasswordResetTokenAlreadyUsedException::new);
+
+        if (resetToken.isUsed())
+            throw new PasswordResetTokenAlreadyUsedException();
+
+        if (resetToken.getExpiration().before(new Date()))
+            throw new PasswordResetTokenAlreadyUsedException();
+
+        AuthUser user = authUserRepository.findById(resetToken.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        authUserRepository.save(user);
+
+        resetToken.setUsed(true);
+        passwordResetTokenRepository.save(resetToken);
     }
 }

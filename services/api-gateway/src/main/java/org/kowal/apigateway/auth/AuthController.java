@@ -1,18 +1,15 @@
 package org.kowal.apigateway.auth;
 
+import lombok.AllArgsConstructor;
 import org.kowal.apigateway.auth.dto.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class AuthController {
 
     private final AuthGatewayService authGatewayService;
-
-    public AuthController(AuthGatewayService authGatewayService) {
-        this.authGatewayService = authGatewayService;
-    }
 
     @PostMapping("/register")
     public RegisterResponseDto register(@RequestBody RegisterRequestDto request) {
@@ -34,6 +31,11 @@ public class AuthController {
         return authGatewayService.verifyEmail(token);
     }
 
+    @PostMapping("/resend-verification")
+    public ResendVerificationResponseDto resendVerification(@RequestBody ResendVerificationRequestDto request) {
+        return authGatewayService.resendVerification(request);
+    }
+
     @PostMapping("/reset-password")
     public ResetPasswordResponseDto resetPassword(@RequestBody ResetPasswordRequestDto request){
         return authGatewayService.resetPassword(request);
@@ -41,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/reset-password/confirm")
     public ResetPasswordConfirmResponseDto resetPasswordConfirm(@RequestBody ResetPasswordConfirmRequestDto request) {
-        return null;
+        return authGatewayService.resetPasswordConfirm(request);
     }
 
     @GetMapping("/test")

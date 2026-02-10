@@ -68,5 +68,4 @@ public class RefreshTokenService {
 
         return new TokenPair(newAccessToken, newRefreshToken);
     }
-
 }

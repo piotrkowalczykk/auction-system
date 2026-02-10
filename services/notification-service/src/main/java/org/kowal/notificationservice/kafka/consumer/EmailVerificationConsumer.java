@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class EmailVerificationConsumer {
     private final EmailService emailService;
 
-    @KafkaListener(topics = KafkaTopics.EMAIL_VERIFICATION, groupId = "notification-service"
-    , containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = KafkaTopics.EMAIL_VERIFICATION, groupId = "notification-service",
+            containerFactory = "kafkaListenerContainerFactory")
     public void consume(byte[] bytes) throws InvalidProtocolBufferException {
 
         EmailVerificationEvent event = EmailVerificationEvent.parseFrom(bytes);

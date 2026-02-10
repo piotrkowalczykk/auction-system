@@ -50,9 +50,26 @@ public class AuthGatewayService {
         );
     }
 
+    public ResendVerificationResponseDto resendVerification(ResendVerificationRequestDto request){
+        ResendVerificationEmailResponse grpcResponse = authGrpcClient.resendVerification(request.getEmail());
+
+        return new ResendVerificationResponseDto(
+                grpcResponse.getMessage(),
+                grpcResponse.getResent()
+        );
+    }
+
     public ResetPasswordResponseDto resetPassword(ResetPasswordRequestDto request) {
         ResetPasswordResponse grpcResponse = authGrpcClient.resetPassword(request.getEmail());
         return new ResetPasswordResponseDto(
+                grpcResponse.getMessage(),
+                grpcResponse.getReset()
+        );
+    }
+
+    public ResetPasswordConfirmResponseDto resetPasswordConfirm(ResetPasswordConfirmRequestDto request) {
+        ResetPasswordConfirmResponse grpcResponse = authGrpcClient.resetPasswordConfirm(request.getToken(), request.getNewPassword());
+        return new ResetPasswordConfirmResponseDto(
                 grpcResponse.getMessage(),
                 grpcResponse.getReset()
         );
