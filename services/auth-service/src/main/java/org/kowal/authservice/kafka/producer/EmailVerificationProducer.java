@@ -14,13 +14,10 @@ public class EmailVerificationProducer {
     private final KafkaTemplate<String, byte[]> kafkaTemplate;
 
     public void send(EmailVerificationEvent event){
-
-        byte[] bytes = event.toByteArray();
-
         kafkaTemplate.send(
                 KafkaTopics.EMAIL_VERIFICATION,
                 event.getUserId(),
-                bytes
+                event.toByteArray()
         );
     }
 }

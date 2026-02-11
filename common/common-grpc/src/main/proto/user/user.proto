@@ -1,0 +1,45 @@
+syntax = "proto3";
+package user;
+
+option java_multiple_files = true;
+option java_package = "org.kowal.user.grpc";
+option java_outer_classname = "UserProto";
+
+import "google/protobuf/timestamp.proto";
+
+service UserService {
+  rpc GetUserProfile (GetUserProfileRequest) returns (GetUserProfileResponse);
+  rpc GetUserProfileByEmail (GetUserProfileByEmailRequest) returns (GetUserProfileResponse);
+  rpc UpdateUserProfile (UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
+}
+
+message GetUserProfileRequest {
+  string user_id = 1;
+}
+
+message GetUserProfileByEmailRequest {
+  string email = 1;
+}
+
+message GetUserProfileResponse {
+  string user_id = 1;
+  string email = 2;
+  string nickname = 3;
+  string first_name = 4;
+  string last_name = 5;
+  double seller_rating = 6;
+  double buyer_rating = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message UpdateUserProfileRequest {
+  string user_id = 1;
+  string nickname = 2;
+  string first_name = 3;
+  string last_name = 4;
+}
+
+message UpdateUserProfileResponse {
+  string message = 1;
+  bool success = 2;
+}

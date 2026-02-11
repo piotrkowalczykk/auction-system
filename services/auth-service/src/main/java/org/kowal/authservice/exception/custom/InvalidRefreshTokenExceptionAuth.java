@@ -2,8 +2,8 @@ package org.kowal.authservice.exception.custom;
 
 import io.grpc.Status;
 
-public class InvalidRefreshTokenException extends ServiceException {
-    public InvalidRefreshTokenException() {
+public class InvalidRefreshTokenExceptionAuth extends AuthServiceException {
+    public InvalidRefreshTokenExceptionAuth() {
         super("Invalid refresh token", Status.UNAUTHENTICATED);
     }
 }

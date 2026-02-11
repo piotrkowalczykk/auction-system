@@ -4,9 +4,9 @@ import io.grpc.Status;
 import lombok.Getter;
 
 @Getter
-public class ServiceException extends RuntimeException{
+public class AuthServiceException extends RuntimeException{
     private final Status grpcStatus;
-    public ServiceException(String message, Status grpcStatus) {
+    public AuthServiceException(String message, Status grpcStatus) {
         super(message);
         this.grpcStatus = grpcStatus;
     }

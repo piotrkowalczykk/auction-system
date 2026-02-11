@@ -3,8 +3,8 @@ package org.kowal.authservice.service;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kowal.authservice.entity.AuthUser;
-import org.kowal.authservice.exception.custom.EmailAlreadyExistsException;
-import org.kowal.authservice.exception.custom.EmailNotVerifiedException;
+import org.kowal.authservice.exception.custom.EmailAlreadyExistsExceptionAuth;
+import org.kowal.authservice.exception.custom.EmailNotVerifiedExceptionAuth;
 import org.kowal.authservice.repository.AuthUserRepository;
 import org.kowal.security.JwtService;
 import org.kowal.security.TokenPair;
@@ -76,7 +76,7 @@ public class AuthenticationServiceTest {
         when(authUserRepository.findByEmail(email))
                 .thenReturn(Optional.of(new AuthUser()));
 
-        assertThrows(EmailAlreadyExistsException.class,
+        assertThrows(EmailAlreadyExistsExceptionAuth.class,
                 () -> authenticationService.register(email, "password"));
     }
 
@@ -123,7 +123,7 @@ public class AuthenticationServiceTest {
                 .thenReturn(true);
 
         assertThrows(
-                EmailNotVerifiedException.class,
+                EmailNotVerifiedExceptionAuth.class,
                 () -> authenticationService.login(user.getEmail(), "password")
         );
     }

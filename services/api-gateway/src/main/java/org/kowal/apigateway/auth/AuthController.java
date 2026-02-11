@@ -46,9 +46,4 @@ public class AuthController {
     public ResetPasswordConfirmResponseDto resetPasswordConfirm(@Valid @RequestBody ResetPasswordConfirmRequestDto request) {
         return authGatewayService.resetPasswordConfirm(request);
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
 }

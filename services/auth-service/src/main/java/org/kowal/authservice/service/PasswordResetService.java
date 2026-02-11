@@ -3,8 +3,8 @@ package org.kowal.authservice.service;
 import lombok.AllArgsConstructor;
 import org.kowal.authservice.entity.AuthUser;
 import org.kowal.authservice.entity.PasswordResetToken;
-import org.kowal.authservice.exception.custom.PasswordResetTokenAlreadyUsedException;
-import org.kowal.authservice.exception.custom.UserNotFoundException;
+import org.kowal.authservice.exception.custom.PasswordResetTokenAlreadyUsedExceptionAuth;
+import org.kowal.authservice.exception.custom.UserNotFoundExceptionAuth;
 import org.kowal.authservice.kafka.producer.PasswordResetProducer;
 import org.kowal.authservice.repository.AuthUserRepository;
 import org.kowal.authservice.repository.PasswordResetTokenRepository;
@@ -27,7 +27,7 @@ public class PasswordResetService {
     public void requestReset(String email) {
 
         AuthUser user = authUserRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(UserNotFoundExceptionAuth::new);
 
         String token = UUID.randomUUID().toString();
 
@@ -48,16 +48,16 @@ public class PasswordResetService {
 
     public void confirmReset(String token, String newPassword) {
         PasswordResetToken resetToken = passwordResetTokenRepository.findById(token)
-                .orElseThrow(PasswordResetTokenAlreadyUsedException::new);
+                .orElseThrow(PasswordResetTokenAlreadyUsedExceptionAuth::new);
 
         if (resetToken.isUsed())
-            throw new PasswordResetTokenAlreadyUsedException();
+            throw new PasswordResetTokenAlreadyUsedExceptionAuth();
 
         if (resetToken.getExpiration().before(new Date()))
-            throw new PasswordResetTokenAlreadyUsedException();
+            throw new PasswordResetTokenAlreadyUsedExceptionAuth();
 
         AuthUser user = authUserRepository.findById(resetToken.getUserId())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(UserNotFoundExceptionAuth::new);
 
         user.setPassword(passwordEncoder.encode(newPassword));
         authUserRepository.save(user);
