@@ -2,8 +2,13 @@ package org.kowal.apigateway.user;
 
 import lombok.AllArgsConstructor;
 import org.kowal.apigateway.grpc.UserGrpcClient;
+import org.kowal.apigateway.user.dto.UpdateUserProfileRequestDto;
 import org.kowal.apigateway.user.dto.UserProfileResponseDto;
+import org.kowal.apigateway.user.dto.UserPublicProfileResponseDto;
+import org.kowal.apigateway.user.mapper.UserGrpcMapper;
 import org.kowal.user.grpc.GetUserProfileResponse;
+import org.kowal.user.grpc.GetUserPublicProfileResponse;
+import org.kowal.user.grpc.UpdateUserProfileRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -12,22 +17,21 @@ import java.time.Instant;
 @AllArgsConstructor
 public class UserGatewayService {
     private final UserGrpcClient userGrpcClient;
+    private final UserGrpcMapper userGrpcMapper;
 
     public UserProfileResponseDto getUserProfile(String userId) {
         GetUserProfileResponse grpcResponse = userGrpcClient.getUserProfile(userId);
+        return userGrpcMapper.mapGetUserProfileResponseToUserProfileResponseDto(grpcResponse);
+    }
 
-        UserProfileResponseDto response = UserProfileResponseDto.builder()
-                .id(grpcResponse.getUserId())
-                .nickname(grpcResponse.getNickname())
-                .email(grpcResponse.getEmail())
-                .firstName(grpcResponse.getFirstName())
-                .lastName(grpcResponse.getLastName())
-                .sellerRating(grpcResponse.getSellerRating())
-                .buyerRating(grpcResponse.getBuyerRating())
-                .createdAt(Instant.ofEpochSecond(grpcResponse.getCreatedAt().getSeconds(), grpcResponse.getCreatedAt().getNanos()))
-                .build();
+    public UserPublicProfileResponseDto getUserPublicProfileById(String userId){
+        GetUserPublicProfileResponse grpcResponse = userGrpcClient.getUserPublicProfile(userId);
+        return userGrpcMapper.mapGetUserPublicProfileResponseToUserPublicProfileResponseDto(grpcResponse);
+    }
 
-        return response;
+    public UserProfileResponseDto updateUserProfile(UpdateUserProfileRequestDto request, String userId){
+        GetUserProfileResponse grpcResponse = userGrpcClient.updateUserProfile(request, userId);
+        return userGrpcMapper.mapGetUserProfileResponseToUserProfileResponseDto(grpcResponse);
     }
 
 }

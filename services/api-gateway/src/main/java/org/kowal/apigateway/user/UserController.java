@@ -1,11 +1,12 @@
 package org.kowal.apigateway.user;
 
 import lombok.AllArgsConstructor;
+import org.kowal.apigateway.user.dto.UpdateUserProfileRequestDto;
 import org.kowal.apigateway.user.dto.UserProfileResponseDto;
+import org.kowal.apigateway.user.dto.UserPublicProfileResponseDto;
+import org.kowal.user.grpc.UpdateUserProfileResponse;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -17,5 +18,16 @@ public class UserController {
     public UserProfileResponseDto getCurrentUserProfile(Authentication authentication){
         String userId = authentication.getName();
         return userGatewayService.getUserProfile(userId);
+    }
+
+    @GetMapping("/{userId}")
+    public UserPublicProfileResponseDto getUserPublicProfileById(@PathVariable String userId){
+        return userGatewayService.getUserPublicProfileById(userId);
+    }
+
+    @PutMapping("/me")
+    public UserProfileResponseDto updateUserProfile(Authentication authentication, @RequestBody UpdateUserProfileRequestDto request){
+        String userId = authentication.getName();
+        return userGatewayService.updateUserProfile(request, userId);
     }
 }

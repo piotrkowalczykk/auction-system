@@ -9,16 +9,16 @@ import "google/protobuf/timestamp.proto";
 
 service UserService {
   rpc GetUserProfile (GetUserProfileRequest) returns (GetUserProfileResponse);
-  rpc GetUserProfileByEmail (GetUserProfileByEmailRequest) returns (GetUserProfileResponse);
-  rpc UpdateUserProfile (UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
+  rpc GetUserPublicProfileById (GetUserPublicProfileRequest) returns (GetUserPublicProfileResponse);
+  rpc UpdateUserProfile (UpdateUserProfileRequest) returns (GetUserProfileResponse);
 }
 
 message GetUserProfileRequest {
   string user_id = 1;
 }
 
-message GetUserProfileByEmailRequest {
-  string email = 1;
+message GetUserPublicProfileRequest {
+  string user_id = 1;
 }
 
 message GetUserProfileResponse {
@@ -30,6 +30,16 @@ message GetUserProfileResponse {
   double seller_rating = 6;
   double buyer_rating = 7;
   google.protobuf.Timestamp created_at = 8;
+}
+
+message GetUserPublicProfileResponse {
+  string user_id = 1;
+  string nickname = 2;
+  string first_name = 3;
+  string last_name = 4;
+  double seller_rating = 5;
+  double buyer_rating = 6;
+  google.protobuf.Timestamp created_at = 7;
 }
 
 message UpdateUserProfileRequest {
