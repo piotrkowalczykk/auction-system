@@ -1,6 +1,5 @@
 package org.kowal.userservice.service;
 
-import com.google.api.Authentication;
 import com.google.protobuf.Timestamp;
 import lombok.AllArgsConstructor;
 import org.kowal.user.grpc.GetUserProfileResponse;

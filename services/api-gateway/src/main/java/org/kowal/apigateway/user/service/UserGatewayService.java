@@ -1,17 +1,14 @@
-package org.kowal.apigateway.user;
+package org.kowal.apigateway.user.service;
 
 import lombok.AllArgsConstructor;
-import org.kowal.apigateway.grpc.UserGrpcClient;
+import org.kowal.apigateway.user.grpc.UserGrpcClient;
 import org.kowal.apigateway.user.dto.UpdateUserProfileRequestDto;
 import org.kowal.apigateway.user.dto.UserProfileResponseDto;
 import org.kowal.apigateway.user.dto.UserPublicProfileResponseDto;
 import org.kowal.apigateway.user.mapper.UserGrpcMapper;
 import org.kowal.user.grpc.GetUserProfileResponse;
 import org.kowal.user.grpc.GetUserPublicProfileResponse;
-import org.kowal.user.grpc.UpdateUserProfileRequest;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 
 @Service
 @AllArgsConstructor

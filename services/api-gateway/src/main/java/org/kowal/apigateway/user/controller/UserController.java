@@ -1,10 +1,10 @@
-package org.kowal.apigateway.user;
+package org.kowal.apigateway.user.controller;
 
 import lombok.AllArgsConstructor;
+import org.kowal.apigateway.user.service.UserGatewayService;
 import org.kowal.apigateway.user.dto.UpdateUserProfileRequestDto;
 import org.kowal.apigateway.user.dto.UserProfileResponseDto;
 import org.kowal.apigateway.user.dto.UserPublicProfileResponseDto;
-import org.kowal.user.grpc.UpdateUserProfileResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 

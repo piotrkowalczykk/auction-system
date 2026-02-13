@@ -1,4 +1,4 @@
-package org.kowal.apigateway.grpc;
+package org.kowal.apigateway.auth.grpc;
 
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.kowal.auth.grpc.*;

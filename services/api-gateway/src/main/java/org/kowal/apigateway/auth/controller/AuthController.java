@@ -1,7 +1,8 @@
-package org.kowal.apigateway.auth;
+package org.kowal.apigateway.auth.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.kowal.apigateway.auth.service.AuthGatewayService;
 import org.kowal.apigateway.auth.dto.*;
 import org.springframework.web.bind.annotation.*;
 

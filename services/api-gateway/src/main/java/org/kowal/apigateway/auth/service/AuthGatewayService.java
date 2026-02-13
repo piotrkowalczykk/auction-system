@@ -1,7 +1,7 @@
-package org.kowal.apigateway.auth;
+package org.kowal.apigateway.auth.service;
 
 import org.kowal.apigateway.auth.dto.*;
-import org.kowal.apigateway.grpc.AuthGrpcClient;
+import org.kowal.apigateway.auth.grpc.AuthGrpcClient;
 import org.kowal.auth.grpc.*;
 import org.springframework.stereotype.Service;
 
