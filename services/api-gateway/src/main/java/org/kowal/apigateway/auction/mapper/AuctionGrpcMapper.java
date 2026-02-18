@@ -3,7 +3,7 @@ package org.kowal.apigateway.auction.mapper;
 import com.google.protobuf.Timestamp;
 import org.kowal.apigateway.auction.dto.AuctionResponseDto;
 import org.kowal.auction.grpc.AuctionResponse;
-import org.kowal.auction.grpc.Decimal;
+import org.kowal.common.Decimal;
 import org.kowal.enums.AuctionStatus;
 import org.kowal.enums.AuctionType;
 import org.springframework.stereotype.Component;

@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import org.kowal.auction.grpc.AuctionResponse;
 import org.kowal.auction.grpc.CreateAuctionRequest;
 import org.kowal.auctionservice.entity.Auction;
+import org.kowal.auctionservice.kafka.producer.AuctionCreatedProducer;
 import org.kowal.auctionservice.mapper.AuctionGrpcMapper;
 import org.kowal.auctionservice.repository.AuctionRepository;
 import org.kowal.enums.AuctionStatus;
 import org.kowal.enums.AuctionType;
+import org.kowal.event.grpc.AuctionCreatedEvent;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -17,6 +19,8 @@ import java.time.Instant;
 public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final AuctionGrpcMapper auctionGrpcMapper;
+    private final AuctionCreatedProducer auctionCreatedProducer;
+
 
     public AuctionResponse createAuction(CreateAuctionRequest request){
 
@@ -37,6 +41,17 @@ public class AuctionService {
                 .build();
 
         Auction saved = auctionRepository.save(auction);
+
+        AuctionCreatedEvent event = AuctionCreatedEvent.newBuilder()
+                .setAuctionId(saved.getId())
+                .setSellerId(saved.getSellerId())
+                .setStartPrice(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getStartPrice()))
+                .setMinIncrement(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getMinIncrement()))
+                .setEndTime(auctionGrpcMapper.mapInstantToTimestamp(saved.getEndTime()))
+                .build();
+
+        auctionCreatedProducer.send(event);
+
         return auctionGrpcMapper.mapAuctionToGrpcResponse(saved);
     }
 }

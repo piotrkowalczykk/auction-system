@@ -2,8 +2,8 @@ package org.kowal.auctionservice.mapper;
 
 import com.google.protobuf.Timestamp;
 import org.kowal.auction.grpc.AuctionResponse;
-import org.kowal.auction.grpc.Decimal;
 import org.kowal.auctionservice.entity.Auction;
+import org.kowal.common.Decimal;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

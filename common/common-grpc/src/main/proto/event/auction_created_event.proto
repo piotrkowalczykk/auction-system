@@ -1,0 +1,18 @@
+syntax = "proto3";
+package event;
+
+option java_multiple_files = true;
+option java_package = "org.kowal.event.grpc";
+
+import "google/protobuf/timestamp.proto";
+import "common/decimal.proto";
+
+message AuctionCreatedEvent{
+  string auctionId = 1;
+  string sellerId = 2;
+
+  common.Decimal startPrice = 3;
+  common.Decimal minIncrement = 4;
+
+  google.protobuf.Timestamp endTime = 5;
+}

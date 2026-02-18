@@ -32,9 +32,20 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.1</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -99,6 +110,34 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+
+                <configuration>
+
+                    <protoSourceRoot>
+                        ${project.basedir}/src/main/proto
+                    </protoSourceRoot>
+
+                    <protocArtifact>
+                        com.google.protobuf:protoc:3.25.3:exe:${os.detected.classifier}
+                    </protocArtifact>
+
+                </configuration>
+
+                <executions>
+
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+
             </plugin>
         </plugins>
     </build>

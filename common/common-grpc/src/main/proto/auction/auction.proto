@@ -6,6 +6,7 @@ option java_package = "org.kowal.auction.grpc";
 option java_outer_classname = "AuctionProto";
 
 import "google/protobuf/timestamp.proto";
+import "common/decimal.proto";
 
 service AuctionService{
   rpc CreateAuction (CreateAuctionRequest) returns (AuctionResponse);
@@ -15,17 +16,12 @@ service AuctionService{
 message CreateAuctionRequest{
   string title = 1;
   string description = 2;
-  Decimal startPrice = 3;
-  Decimal buyNowPrice = 4;
-  Decimal minIncrement = 5;
+  common.Decimal startPrice = 3;
+  common.Decimal buyNowPrice = 4;
+  common.Decimal minIncrement = 5;
   google.protobuf.Timestamp endTime = 6;
   string auctionType = 7;
   string userId = 8;
-}
-
-message Decimal{
-  int64 units = 1;
-  int32 nanos = 2;
 }
 
 message AuctionResponse{
@@ -33,10 +29,10 @@ message AuctionResponse{
   string title = 2;
   string description = 3;
   string sellerId = 4;
-  Decimal startPrice = 5;
-  Decimal currentPrice = 6;
-  Decimal buyNowPrice = 7;
-  Decimal minIncrement = 8;
+  common.Decimal startPrice = 5;
+  common.Decimal currentPrice = 6;
+  common.Decimal buyNowPrice = 7;
+  common.Decimal minIncrement = 8;
   google.protobuf.Timestamp startTime = 9;
   google.protobuf.Timestamp endTime = 10;
   string auctionStatus = 11;

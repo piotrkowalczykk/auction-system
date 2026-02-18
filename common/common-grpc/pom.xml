@@ -34,6 +34,11 @@
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.kowal</groupId>
+            <artifactId>common-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -50,15 +55,35 @@
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
+
                 <configuration>
+
+                    <!-- proto files w common-grpc -->
+                    <protoSourceRoot>
+                        ${project.basedir}/src/main/proto
+                    </protoSourceRoot>
+
+                    <!-- proto files w common-model -->
+                    <additionalProtoPathElements>
+                        <additionalProtoPathElement>
+                            ${project.basedir}/../common-model/src/main/proto
+                        </additionalProtoPathElement>
+                    </additionalProtoPathElements>
+
+                    <!-- protoc -->
                     <protocArtifact>
                         com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
                     </protocArtifact>
+
+                    <!-- grpc -->
                     <pluginId>grpc-java</pluginId>
+
                     <pluginArtifact>
                         io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
                     </pluginArtifact>
+
                 </configuration>
+
                 <executions>
                     <execution>
                         <goals>
@@ -67,6 +92,7 @@
                         </goals>
                     </execution>
                 </executions>
+
             </plugin>
         </plugins>
     </build>
