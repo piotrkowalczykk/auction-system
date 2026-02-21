@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package bidding;
+
+option java_multiple_files = true;
+option java_package = "org.kowal.bidding.grpc";
+option java_outer_classname = "BiddingProto";
+
+import "common/decimal.proto";
+
+service BiddingService {
+  rpc PlaceBid (PlaceBidRequest) returns (PlaceBidResponse);
+}
+
+message PlaceBidRequest {
+  string auctionId = 1;
+  string bidderId = 2;
+  common.Decimal amount = 3;
+}
+
+message PlaceBidResponse {
+  bool success = 1;
+  string message = 2;
+}

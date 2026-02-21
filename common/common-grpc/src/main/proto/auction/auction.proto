@@ -11,6 +11,7 @@ import "common/decimal.proto";
 service AuctionService{
   rpc CreateAuction (CreateAuctionRequest) returns (AuctionResponse);
   rpc GetAuction (GetAuctionRequest) returns (AuctionResponse);
+  rpc ValidateAuction (ValidateAuctionRequest) returns (ValidateAuctionResponse);
 }
 
 message CreateAuctionRequest{
@@ -42,4 +43,15 @@ message AuctionResponse{
 
 message GetAuctionRequest{
   string auctionId = 1;
+}
+
+message ValidateAuctionRequest {
+  string auctionId = 1;
+}
+
+message ValidateAuctionResponse {
+  bool valid = 1;
+  string reason = 2;
+  common.Decimal currentPrice = 3;
+  common.Decimal minIncrement = 4;
 }

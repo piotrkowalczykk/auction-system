@@ -13,6 +13,7 @@ message AuctionCreatedEvent{
 
   common.Decimal startPrice = 3;
   common.Decimal minIncrement = 4;
+  common.Decimal buyNowPrice = 5;
 
-  google.protobuf.Timestamp endTime = 5;
+  google.protobuf.Timestamp endTime = 6;
 }

@@ -47,6 +47,7 @@ public class AuctionService {
                 .setSellerId(saved.getSellerId())
                 .setStartPrice(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getStartPrice()))
                 .setMinIncrement(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getMinIncrement()))
+                .setBuyNowPrice(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getBuyNowPrice()))
                 .setEndTime(auctionGrpcMapper.mapInstantToTimestamp(saved.getEndTime()))
                 .build();
 
