@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.kowal.auction.grpc.AuctionResponse;
 import org.kowal.auction.grpc.CreateAuctionRequest;
 import org.kowal.auctionservice.entity.Auction;
+import org.kowal.auctionservice.exception.custom.AuctionNotFoundException;
 import org.kowal.auctionservice.kafka.producer.AuctionCreatedProducer;
 import org.kowal.auctionservice.mapper.AuctionGrpcMapper;
 import org.kowal.auctionservice.repository.AuctionRepository;
@@ -54,5 +55,13 @@ public class AuctionService {
         auctionCreatedProducer.send(event);
 
         return auctionGrpcMapper.mapAuctionToGrpcResponse(saved);
+    }
+
+    public void finishAuction(String auctionId){
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new AuctionNotFoundException(auctionId));
+
+        auction.setAuctionStatus(AuctionStatus.ENDED);
+        auctionRepository.save(auction);
     }
 }

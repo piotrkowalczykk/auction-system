@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package event;
+
+option java_multiple_files = true;
+option java_package = "org.kowal.event.grpc";
+
+message AuctionEndedEvent {
+  string auctionId = 1;
+  string winnerId = 2;
+}

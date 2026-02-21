@@ -29,4 +29,14 @@ public class EmailService {
         message.setText("Copy the following token to reset your password: " + token);
         mailSender.send(message);
     }
+
+    public void sendAuctionWinnerEmail(String email, String auctionId){
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("You won the auction!");
+        message.setText("Congratulations! You won the auction: " + auctionId);
+
+        mailSender.send(message);
+    }
 }
