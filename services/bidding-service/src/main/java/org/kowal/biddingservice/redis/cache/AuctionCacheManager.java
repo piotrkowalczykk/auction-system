@@ -1,6 +1,7 @@
 package org.kowal.biddingservice.redis.cache;
 
 import lombok.RequiredArgsConstructor;
+import org.kowal.enums.AuctionType;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -15,13 +16,14 @@ import java.util.concurrent.TimeUnit;
 public class AuctionCacheManager {
     private final StringRedisTemplate redisTemplate;
 
-    public void initializeAuction(String auctionId, BigDecimal startPrice, BigDecimal minIncrement, BigDecimal buyNowPrice, Instant endTime){
+    public void initializeAuction(String auctionId, BigDecimal startPrice, BigDecimal minIncrement, BigDecimal buyNowPrice, Instant endTime, AuctionType auctionType){
         String key = buildKey(auctionId);
         redisTemplate.opsForHash().put(key, "currentPrice", startPrice.toString());
         redisTemplate.opsForHash().put(key, "minIncrement", minIncrement.toString());
         redisTemplate.opsForHash().put(key, "buyNowPrice", buyNowPrice.toString());
         redisTemplate.opsForHash().put(key, "winnerId", "");
         redisTemplate.opsForHash().put(key, "endTime", String.valueOf(endTime.getEpochSecond()));
+        redisTemplate.opsForHash().put(key, "auctionType", auctionType.name());
 
         long ttl = Duration.between(Instant.now(), endTime).getSeconds();
         redisTemplate.expire(key, ttl, TimeUnit.SECONDS);
@@ -39,5 +41,9 @@ public class AuctionCacheManager {
 
     private String buildKey(String auctionId) {
         return "auction:" + auctionId;
+    }
+
+    public void deleteAuction(String auctionId){
+        redisTemplate.delete(buildKey(auctionId));
     }
 }

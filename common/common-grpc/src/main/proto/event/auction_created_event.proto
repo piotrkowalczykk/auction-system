@@ -15,5 +15,7 @@ message AuctionCreatedEvent{
   common.Decimal minIncrement = 4;
   common.Decimal buyNowPrice = 5;
 
-  google.protobuf.Timestamp endTime = 6;
+  string auctionType = 6;
+
+  google.protobuf.Timestamp endTime = 7;
 }

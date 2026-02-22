@@ -10,6 +10,7 @@ import "common/decimal.proto";
 
 service BiddingService {
   rpc PlaceBid (PlaceBidRequest) returns (PlaceBidResponse);
+  rpc BuyNow (BuyNowRequest) returns (BuyNowResponse);
 }
 
 message PlaceBidRequest {
@@ -19,6 +20,16 @@ message PlaceBidRequest {
 }
 
 message PlaceBidResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message BuyNowRequest {
+  string auctionId = 1;
+  string bidderId = 2;
+}
+
+message BuyNowResponse {
   bool success = 1;
   string message = 2;
 }

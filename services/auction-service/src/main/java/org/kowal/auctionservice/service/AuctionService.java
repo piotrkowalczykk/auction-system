@@ -13,6 +13,7 @@ import org.kowal.enums.AuctionType;
 import org.kowal.event.grpc.AuctionCreatedEvent;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Service
@@ -22,22 +23,46 @@ public class AuctionService {
     private final AuctionGrpcMapper auctionGrpcMapper;
     private final AuctionCreatedProducer auctionCreatedProducer;
 
-
     public AuctionResponse createAuction(CreateAuctionRequest request){
 
+        AuctionType type = AuctionType.valueOf(request.getAuctionType());
+
+        BigDecimal startPrice = auctionGrpcMapper.mapDecimalToBigDecimal(request.getStartPrice());
+        BigDecimal minIncrement = null;
+        BigDecimal buyNowPrice = null;
+
+        switch(type){
+            case AUCTION_ONLY -> {
+                if(request.getMinIncrement() == null)
+                    throw new IllegalArgumentException("Min increment required for BID auction");
+                minIncrement = auctionGrpcMapper.mapDecimalToBigDecimal(request.getMinIncrement());
+
+            }
+            case BUY_NOW_ONLY -> {
+                if(request.getBuyNowPrice() == null)
+                    throw new IllegalArgumentException("Buy now price required");
+                buyNowPrice = auctionGrpcMapper.mapDecimalToBigDecimal(request.getBuyNowPrice());
+            }
+            case AUCTION_WITH_BUY_NOW -> {
+                if(request.getMinIncrement() == null || request.getBuyNowPrice() == null)
+                    throw new IllegalArgumentException("Both minIncrement and buyNowPrice required");
+                minIncrement = auctionGrpcMapper.mapDecimalToBigDecimal(request.getMinIncrement());
+                buyNowPrice = auctionGrpcMapper.mapDecimalToBigDecimal(request.getBuyNowPrice());
+            }
+        }
 
         Auction auction = Auction.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .sellerId(request.getUserId())
-                .startPrice(auctionGrpcMapper.mapDecimalToBigDecimal(request.getStartPrice()))
-                .currentPrice(auctionGrpcMapper.mapDecimalToBigDecimal(request.getStartPrice()))
-                .buyNowPrice(auctionGrpcMapper.mapDecimalToBigDecimal(request.getBuyNowPrice()))
-                .minIncrement(auctionGrpcMapper.mapDecimalToBigDecimal(request.getMinIncrement()))
+                .startPrice(startPrice)
+                .currentPrice(startPrice)
+                .buyNowPrice(buyNowPrice)
+                .minIncrement(minIncrement)
                 .startTime(Instant.now())
                 .endTime(auctionGrpcMapper.mapTimestampToInstant(request.getEndTime()))
                 .auctionStatus(AuctionStatus.ACTIVE)
-                .auctionType(AuctionType.valueOf(request.getAuctionType()))
+                .auctionType(type)
                 .createdAt(Instant.now())
                 .build();
 
@@ -47,9 +72,18 @@ public class AuctionService {
                 .setAuctionId(saved.getId())
                 .setSellerId(saved.getSellerId())
                 .setStartPrice(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getStartPrice()))
-                .setMinIncrement(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getMinIncrement()))
-                .setBuyNowPrice(auctionGrpcMapper.mapBigDecimalToDecimal(saved.getBuyNowPrice()))
+                .setMinIncrement(
+                        saved.getMinIncrement() != null
+                                ? auctionGrpcMapper.mapBigDecimalToDecimal(saved.getMinIncrement())
+                                : null
+                )
+                .setBuyNowPrice(
+                        saved.getBuyNowPrice() != null
+                                ? auctionGrpcMapper.mapBigDecimalToDecimal(saved.getBuyNowPrice())
+                                : null
+                )
                 .setEndTime(auctionGrpcMapper.mapInstantToTimestamp(saved.getEndTime()))
+                .setAuctionType(saved.getAuctionType().name())
                 .build();
 
         auctionCreatedProducer.send(event);
