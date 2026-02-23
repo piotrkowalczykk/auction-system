@@ -4,13 +4,17 @@ package bidding;
 
 option java_multiple_files = true;
 option java_package = "org.kowal.bidding.grpc";
-option java_outer_classname = "BiddingProto";
 
 import "common/decimal.proto";
 
 service BiddingService {
+
   rpc PlaceBid (PlaceBidRequest) returns (PlaceBidResponse);
   rpc BuyNow (BuyNowRequest) returns (BuyNowResponse);
+
+  rpc LiveAuction (stream AuctionClientEvent)
+      returns (stream AuctionServerEvent);
+
 }
 
 message PlaceBidRequest {
@@ -32,4 +36,36 @@ message BuyNowRequest {
 message BuyNowResponse {
   bool success = 1;
   string message = 2;
+}
+
+
+
+message AuctionClientEvent {
+  string auctionId = 1;
+  string bidderId = 2;
+
+  oneof payload {
+    PlaceBidRequest bid = 3;
+    JoinAuction join = 4;
+  }
+}
+
+message JoinAuction {}
+
+message AuctionServerEvent {
+  string auctionId = 1;
+
+  oneof payload {
+    AuctionUpdate update = 2;
+    AuctionEnded ended = 3;
+  }
+}
+
+message AuctionUpdate {
+  common.Decimal currentPrice = 1;
+  string leaderId = 2;
+}
+
+message AuctionEnded {
+  string winnerId = 1;
 }

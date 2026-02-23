@@ -25,6 +25,7 @@ public class AuctionCreatedConsumer {
                 biddingGrpcMapper.mapDecimalToBigDecimal(event.getStartPrice()),
                 biddingGrpcMapper.mapDecimalToBigDecimal(event.getMinIncrement()),
                 biddingGrpcMapper.mapDecimalToBigDecimal(event.getBuyNowPrice()),
-                biddingGrpcMapper.mapTimestampToInstant(event.getEndTime()));
+                biddingGrpcMapper.mapTimestampToInstant(event.getEndTime()),
+                event.getAuctionType());
     }
 }

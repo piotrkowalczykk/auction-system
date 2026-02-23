@@ -16,14 +16,14 @@ import java.util.concurrent.TimeUnit;
 public class AuctionCacheManager {
     private final StringRedisTemplate redisTemplate;
 
-    public void initializeAuction(String auctionId, BigDecimal startPrice, BigDecimal minIncrement, BigDecimal buyNowPrice, Instant endTime, AuctionType auctionType){
+    public void initializeAuction(String auctionId, BigDecimal startPrice, BigDecimal minIncrement, BigDecimal buyNowPrice, Instant endTime, String auctionType){
         String key = buildKey(auctionId);
         redisTemplate.opsForHash().put(key, "currentPrice", startPrice.toString());
         redisTemplate.opsForHash().put(key, "minIncrement", minIncrement.toString());
         redisTemplate.opsForHash().put(key, "buyNowPrice", buyNowPrice.toString());
         redisTemplate.opsForHash().put(key, "winnerId", "");
         redisTemplate.opsForHash().put(key, "endTime", String.valueOf(endTime.getEpochSecond()));
-        redisTemplate.opsForHash().put(key, "auctionType", auctionType.name());
+        redisTemplate.opsForHash().put(key, "auctionType", auctionType);
 
         long ttl = Duration.between(Instant.now(), endTime).getSeconds();
         redisTemplate.expire(key, ttl, TimeUnit.SECONDS);
