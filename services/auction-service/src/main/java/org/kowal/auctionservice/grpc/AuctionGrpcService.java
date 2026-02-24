@@ -3,10 +3,7 @@ package org.kowal.auctionservice.grpc;
 import io.grpc.stub.StreamObserver;
 import lombok.AllArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.kowal.auction.grpc.AuctionResponse;
-import org.kowal.auction.grpc.AuctionServiceGrpc;
-import org.kowal.auction.grpc.CreateAuctionRequest;
-import org.kowal.auction.grpc.GetAuctionRequest;
+import org.kowal.auction.grpc.*;
 import org.kowal.auctionservice.service.AuctionService;
 
 @GrpcService
@@ -23,7 +20,9 @@ public class AuctionGrpcService extends AuctionServiceGrpc.AuctionServiceImplBas
     }
 
     @Override
-    public void getAuction(GetAuctionRequest request, StreamObserver<AuctionResponse> responseObserver) {
-        super.getAuction(request, responseObserver);
+    public void getAllAuctions(GetAllAuctionsRequest request, StreamObserver<GetAllAuctionsResponse> responseObserver) {
+        GetAllAuctionsResponse response = auctionService.getAllAuctions();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }

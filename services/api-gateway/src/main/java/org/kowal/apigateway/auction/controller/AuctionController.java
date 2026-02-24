@@ -5,10 +5,9 @@ import org.kowal.apigateway.auction.service.AuctionGatewayService;
 import org.kowal.apigateway.auction.dto.CreateAuctionRequestDto;
 import org.kowal.apigateway.auction.dto.AuctionResponseDto;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auctions")
@@ -20,5 +19,10 @@ public class AuctionController {
     public AuctionResponseDto createAuction(@RequestBody CreateAuctionRequestDto request, Authentication authentication){
         String userId = authentication.getName();
         return auctionGatewayService.createAuction(request, userId);
+    }
+
+    @GetMapping
+    public List<AuctionResponseDto> getAllAuctions(){
+        return auctionGatewayService.getAllAuctions();
     }
 }

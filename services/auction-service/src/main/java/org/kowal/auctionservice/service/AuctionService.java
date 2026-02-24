@@ -3,6 +3,8 @@ package org.kowal.auctionservice.service;
 import lombok.AllArgsConstructor;
 import org.kowal.auction.grpc.AuctionResponse;
 import org.kowal.auction.grpc.CreateAuctionRequest;
+import org.kowal.auction.grpc.GetAllAuctionsRequest;
+import org.kowal.auction.grpc.GetAllAuctionsResponse;
 import org.kowal.auctionservice.entity.Auction;
 import org.kowal.auctionservice.exception.custom.AuctionNotFoundException;
 import org.kowal.auctionservice.kafka.producer.AuctionCreatedProducer;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -98,4 +101,18 @@ public class AuctionService {
         auction.setAuctionStatus(AuctionStatus.ENDED);
         auctionRepository.save(auction);
     }
+
+    public GetAllAuctionsResponse getAllAuctions() {
+
+        List<Auction> auctions = auctionRepository.findAll();
+
+        List<AuctionResponse> grpcResponses = auctions.stream()
+                .map(auctionGrpcMapper::mapAuctionToGrpcResponse)
+                .toList();
+
+        return GetAllAuctionsResponse.newBuilder()
+                .addAllAuctions(grpcResponses)
+                .build();
+    }
+
 }

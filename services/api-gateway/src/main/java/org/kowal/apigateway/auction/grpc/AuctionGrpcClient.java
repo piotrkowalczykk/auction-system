@@ -3,10 +3,9 @@ package org.kowal.apigateway.auction.grpc;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.kowal.apigateway.auction.dto.CreateAuctionRequestDto;
 import org.kowal.apigateway.auction.mapper.AuctionGrpcMapper;
-import org.kowal.auction.grpc.AuctionResponse;
-import org.kowal.auction.grpc.AuctionServiceGrpc;
-import org.kowal.auction.grpc.CreateAuctionRequest;
+import org.kowal.auction.grpc.*;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class AuctionGrpcClient {
@@ -34,5 +33,10 @@ public class AuctionGrpcClient {
 
 
         return auctionServiceBlockingStub.createAuction(grpcRequest);
+    }
+
+    public GetAllAuctionsResponse getAllAuctions(){
+        GetAllAuctionsRequest request = GetAllAuctionsRequest.newBuilder().build();
+        return auctionServiceBlockingStub.getAllAuctions(request);
     }
 }
